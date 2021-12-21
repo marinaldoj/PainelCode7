@@ -20,9 +20,9 @@ const Conteiner = styled.button`
     }
 `;
 
-export default function Indebted({children}){
+export default function Indebted({children, HandleClick}){
     return(
-        <Conteiner>
+        <Conteiner onClick={() => HandleClick()}>
             {children}
         </Conteiner>
     )

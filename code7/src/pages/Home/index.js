@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import axios from 'axios';
 import styled from "styled-components";
+// import axios from "axios";
 
 import Logo from '../../assets/Logo.svg';
 import Indebted from "../../components/Indebted";
-// import Debts from "../../components/Debts";
+import Debts from "../../components/Debts";
 
 const ConteinerMain = styled.div`
     width: 30%;
@@ -51,6 +51,8 @@ const ConteinerListDebts = styled.div`
     padding: 10px 0;
     border-radius: 10px;
     overflow-x: hidden;
+    text-align: center;
+    color: #0B0F54;
     ::-webkit-scrollbar{
         width: 10px;
         border-radius: 50px;
@@ -87,16 +89,69 @@ const Button = styled.button`
     }
 `;
 
-export default function Home(){
+const ClearFilter = styled.button`
+    width: 20%;
+    height: 40px;
+    border-radius: 10px;
+    margin-left: 20px;    
+    background: #005687;
+    color: #ffffff;
+    :hover{
+        background: #0B0F54;
+    }
+`;
 
-    const [indebted, setIndebted] = useState({})
-    // const [debts, setDebts] = useState({})
+export default function Home({HandleModal, data}){
+
+    const mock = [
+        {
+            'idUsuario': 1,
+            'motivo': 'Parcelamento do Veiculo',
+            'valor': 199.99
+        },
+        {
+            'idUsuario': 3,
+            'motivo': 'Parcelamento do Veiculo',
+            'valor': 199.99
+        },
+        {
+            'idUsuario': 2,
+            'motivo': 'Parcelamento do Veiculo',
+            'valor': 199.99
+        },
+        {
+            'idUsuario': 1,
+            'motivo': 'Parcelamento do Veiculo',
+            'valor': 199.99
+        },
+        {
+            'idUsuario': 5,
+            'motivo': 'Parcelamento do Veiculo',
+            'valor': 199.99
+        },
+        {
+            'idUsuario': 7,
+            'motivo': 'Parcelamento do Veiculo',
+            'valor': 199.99
+        },
+    ]
+
+    const [indebted, setIndebted] = useState(data)
+    const [debts, setDebts] = useState(mock)
+    const [listDebts, setListDebts] = useState(mock)
+
+    function filterDebts(idPlace){
+        if(debts.length > 0){
+        const filter = debts.filter((retorno) => {
+            if(retorno.idUsuario === idPlace){
+                return retorno
+            }})
+        setListDebts(filter)}
+    }
 
     useEffect(() => {
-        axios.get('https://jsonplaceholder.typicode.com/users').then(response => {
-            setIndebted(response.data)
-        })
-    }, []);
+        setIndebted(data)
+    }, [data]);
 
     return(
         <Conteiner>
@@ -107,7 +162,10 @@ export default function Home(){
                 <ConteinerIndebted>
                     {indebted.length > 0 ? (indebted.map((user, index) => {
                         return(
-                            <Indebted key={index}>{user.name}</Indebted>
+                            <Indebted 
+                                key={index} 
+                                HandleClick={() => filterDebts(user.id)} 
+                            >{user.name}</Indebted>
                         )
                     })) : 'Nenhum usuário localizado'}
                 </ConteinerIndebted>
@@ -115,9 +173,20 @@ export default function Home(){
             </ConteinerMain>
             <ConteinerDebts>
                 <ConteinerListDebts>
+                    {listDebts.length > 0 ? (listDebts.map((data, index) => {
+                        return <Debts dados={data} key={index} HandleOpenModal={() => HandleModal({isOpen: true, modalType: true, dataEdit: data})} />
+                    })) : (
+                    <>
+                        Nenhum débito cadastrado!
+                        { debts.length > 0 ? 
+                            (<ClearFilter 
+                                onClick={() => setListDebts(debts)}
+                            >Limpar filtro</ClearFilter>) : null
+                        }
+                    </>)}
                     
                 </ConteinerListDebts>
-                <Button>Novo</Button>      
+                <Button onClick={() => HandleModal({isOpen: true})}>Novo</Button>      
             </ConteinerDebts>            
         </Conteiner>
     )

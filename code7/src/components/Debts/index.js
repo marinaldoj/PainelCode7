@@ -6,7 +6,7 @@ const Container = styled.div`
     height: 15%;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-evenly;
     font-size: 18px;
     font-weight: 400;
     background: #1198E4;
@@ -15,15 +15,30 @@ const Container = styled.div`
     margin-bottom: 20px;
     margin-left: 5%;
     transition: 0.2s;
+    cursor: pointer;
     :hover{
         background: #0B0F54;
     }
+    :active{
+        transform: translatex(10px);
+    }
 `;
 
-export default function Debts(){
-    return(
-        <Container>
+const FieldText = styled.p``;
 
+const Line = styled.div`
+    width: 1px;
+    height: 90%;
+    background: #fff;
+`;
+
+export default function Debts({dados, HandleOpenModal}){
+    return(
+        <Container onClick={() => HandleOpenModal()}>
+            <FieldText>{dados.valor}</FieldText>
+            <Line />
+            <FieldText>{dados.idUsuario}</FieldText>
+            <FieldText>{dados.motivo}</FieldText>
         </Container>
     )
 }

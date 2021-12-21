@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { useNavigate } from 'react-router-dom'
 
 const Container = styled.div`
     width: ${props => props.setWidth ? `${props.setWidth}%` : '10%' };
@@ -34,6 +35,9 @@ export default function Aside({
     MouseEnter,
     MouseLeave
 }){
+
+    const navigate = useNavigate()
+
     return(
         
         <Container 
@@ -41,8 +45,14 @@ export default function Aside({
             onMouseEnter={() => MouseEnter()} 
             onMouseLeave={() => MouseLeave()}
         >
-            <Button setWidth={width}>Home</Button>
-            <Button setWidth={width}>Dashboard</Button>
+            <Button 
+                setWidth={width}
+                onClick={() => {navigate('/')}}
+            >Home</Button>
+            <Button 
+                setWidth={width}
+                onClick={() => {navigate('/dashboard')}}
+            >Dashboard</Button>
         </Container>
     )
 }
